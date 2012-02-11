@@ -64,6 +64,7 @@ function toggleBGS() {
 function createBGGUserText(elementToAppendTo) {
 	var bggUserDiv = document.createElement("div");
 	bggUserDiv.id = "bggUser";
+// commenting out to make testing easier.
 //	bggUserDiv.style.display = "none";
 	
 	bggUserDiv.appendChild(document.createTextNode("BGG Username"));
@@ -84,7 +85,6 @@ function createBGGUserText(elementToAppendTo) {
 }
 
 function getUserCollection() {
-	alert("bggUsername = " + document.getElementById("bggUsername").value);
 	GM_xmlhttpRequest({
 		method: 'GET',
 		url: 'http://boardgamegeek.com/xmlapi/collection/' + document.getElementById("bggUsername").value + "?own=1",
@@ -97,19 +97,36 @@ function getUserCollection() {
 			var dom = parser.parseFromString(responseDetails.responseText,
 				"application/xml");
 			var entries = dom.getElementsByTagName('item');
-			var title;
-			for (var i = 0; i < entries.length; i++) {
-				title = entries[i].getElementsByTagName('name')[0].textContent;
-				alert(title);
-			}
+			createGameDisplay(entries);
 		}
 	});
 }
 
 function createGameDisplay(gameItems) {
+	var gameDiv = document.createElement("div");
+	gameDiv.id = "games";
+	
+	var gameTable = document.createElement("table");
+	gameDiv.appendChild(gameTable);
+	
+	var gameRow;
+	var gameName;
+	for (var i=0; i<gameItems.length; i++) {
+		gameRow = document.createElement("tr");
+		gameName = document.createElement("td");
+		gameName.appendChild(document.createTextNode(gameItems[i].getElementsByTagName('name')[0].textContent));
+		
+		gameRow.appendChild(gameName);
+		
+		gameTable.appendChild(gameRow);
+	}
+	
+	var selectorDiv = document.getElementById("boardGameSelector");
+	selectorDiv.appendChild(gameDiv);
 }
 
 var bgsDiv = document.createElement("div");
+bgsDiv.id = "boardGameSelector";
 createEnablingCheckbox(bgsDiv);
 createBGGUserText(bgsDiv);
 
