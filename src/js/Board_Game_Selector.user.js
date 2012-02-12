@@ -113,7 +113,9 @@ function createGameDisplay(gameItems) {
 	var gameRow = document.createElement("tr");
 	gameRow.appendChild(createGameDisplayColumnHeader("Name"));
 	gameRow.appendChild(createGameDisplayColumnHeader("Players"));
+	gameRow.appendChild(createGameDisplayColumnHeader("Playing Time"));
 	gameRow.appendChild(createGameDisplayColumnHeader("User Rating"));
+	gameRow.appendChild(createGameDisplayColumnHeader("BGG Rating"));
 	
 	gameTable.appendChild(gameRow);
 	var gameDataText;
@@ -127,8 +129,12 @@ function createGameDisplay(gameItems) {
 		gameDataText = gameStatTag.getAttribute("minplayers") + "-" + gameStatTag.getAttribute("maxplayers");
 		gameRow.appendChild(createGameDisplayColumnData(gameDataText));
 		
+		gameRow.appendChild(createGameDisplayColumnData(gameStatTag.getAttribute("playingtime")));
+		
 		gameRatingTag = gameStatTag.getElementsByTagName("rating")[0];
 		gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getAttribute("value")));
+		
+		gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getElementsByTagName("average")[0].getAttribute("value")));
 		
 		gameTable.appendChild(gameRow);
 	}
