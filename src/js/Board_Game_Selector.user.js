@@ -109,20 +109,46 @@ function createGameDisplay(gameItems) {
 	var gameTable = document.createElement("table");
 	gameDiv.appendChild(gameTable);
 	
-	var gameRow;
-	var gameName;
+	// Create Headers
+	var gameRow = document.createElement("tr");
+	gameRow.appendChild(createGameDisplayColumnHeader("Name"));
+	gameRow.appendChild(createGameDisplayColumnHeader("Players"));
+	gameRow.appendChild(createGameDisplayColumnHeader("User Rating"));
+	
+	gameTable.appendChild(gameRow);
+	var gameDataText;
+	var gameStatTag;
+	var gameRatingTag;
 	for (var i=0; i<gameItems.length; i++) {
 		gameRow = document.createElement("tr");
-		gameName = document.createElement("td");
-		gameName.appendChild(document.createTextNode(gameItems[i].getElementsByTagName('name')[0].textContent));
+		gameRow.appendChild(createGameDisplayColumnData(gameItems[i].getElementsByTagName("name")[0].textContent));
 		
-		gameRow.appendChild(gameName);
+		gameStatTag = gameItems[i].getElementsByTagName("stats")[0];
+		gameDataText = gameStatTag.getAttribute("minplayers") + "-" + gameStatTag.getAttribute("maxplayers");
+		gameRow.appendChild(createGameDisplayColumnData(gameDataText));
+		
+		gameRatingTag = gameStatTag.getElementsByTagName("rating")[0];
+		gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getAttribute("value")));
 		
 		gameTable.appendChild(gameRow);
 	}
 	
 	var selectorDiv = document.getElementById("boardGameSelector");
 	selectorDiv.appendChild(gameDiv);
+}
+
+function createGameDisplayColumnData(columnDataText) {
+	var columnData = document.createElement("td");
+	columnData.appendChild(document.createTextNode(columnDataText));
+	
+	return columnData;
+}
+
+function createGameDisplayColumnHeader(columnName) {
+	var columnHeader = document.createElement("th");
+	columnHeader.appendChild(document.createTextNode(columnName));
+	
+	return columnHeader;
 }
 
 var bgsDiv = document.createElement("div");
