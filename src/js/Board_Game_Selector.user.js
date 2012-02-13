@@ -84,6 +84,30 @@ function createBGGUserText(elementToAppendTo) {
 	elementToAppendTo.appendChild(bggUserDiv);
 }
 
+function createGameSelectorForm(elementToAppendTo) {
+	var gameSelectorFormDiv = document.createElement("div");
+	gameSelectorFormDiv.id = "gameSelectorForm";
+	
+	createBGGUserText(gameSelectorFormDiv);
+	createNumPlayersText(gameSelectorFormDiv);
+	
+	elementToAppendTo.appendChild(gameSelectorFormDiv);
+}
+
+function createNumPlayersText(elementToAppendTo) {
+	var numPlayersDiv = document.createElement("div");
+	numPlayersDiv.id = "numPlayers";
+	
+	numPlayersDiv.appendChild(document.createTextNode("Num Players"));
+	
+	var numPlayersInput = document.createElement("input");
+	numPlayersInput.id = "numPlayersInput";
+	numPlayersInput.type = "text";
+	numPlayersDiv.appendChild(numPlayersInput);
+	
+	elementToAppendTo.appendChild(numPlayersDiv);
+}
+
 function getUserCollection() {
 	GM_xmlhttpRequest({
 		method: 'GET',
@@ -111,6 +135,7 @@ function createGameDisplay(gameItems) {
 	
 	// Create Headers
 	var gameRow = document.createElement("tr");
+	//gameRow.appendChild(createGameDisplayColumnHeader(""));
 	gameRow.appendChild(createGameDisplayColumnHeader("Name"));
 	gameRow.appendChild(createGameDisplayColumnHeader("Players"));
 	gameRow.appendChild(createGameDisplayColumnHeader("Playing Time"));
@@ -118,11 +143,22 @@ function createGameDisplay(gameItems) {
 	gameRow.appendChild(createGameDisplayColumnHeader("BGG Rating"));
 	
 	gameTable.appendChild(gameRow);
+	var gameImage;
+	var gameImageData;
 	var gameDataText;
 	var gameStatTag;
 	var gameRatingTag;
 	for (var i=0; i<gameItems.length; i++) {
 		gameRow = document.createElement("tr");
+		
+		/* Showing thumbnail images, but need to consider their size more.
+		gameImage = document.createElement("td");
+		gameImageData = document.createElement("img");
+		gameImageData.src = gameItems[i].getElementsByTagName("thumbnail")[0].textContent;
+		gameImage.appendChild(gameImageData);
+		gameRow.appendChild(gameImage);
+		*/
+		
 		gameRow.appendChild(createGameDisplayColumnData(gameItems[i].getElementsByTagName("name")[0].textContent));
 		
 		gameStatTag = gameItems[i].getElementsByTagName("stats")[0];
@@ -160,7 +196,7 @@ function createGameDisplayColumnHeader(columnName) {
 var bgsDiv = document.createElement("div");
 bgsDiv.id = "boardGameSelector";
 createEnablingCheckbox(bgsDiv);
-createBGGUserText(bgsDiv);
+createGameSelectorForm(bgsDiv);
 
 
 var mainContent = document.getElementById("maincontent");
