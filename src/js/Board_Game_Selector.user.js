@@ -149,8 +149,6 @@ function createGameDisplay(gameItems) {
 	
 	var numberOfPlayers = document.getElementById("numPlayersInput").value;
 	//TODO: Need to validate that it's a number and display an error instead of the games.
-	alert("numPlayers = " + document.getElementById("numPlayersInput"));
-	alert("numberOfPlayers = " + numberOfPlayers);
 	
 	var gameImage;
 	var gameImageData;
