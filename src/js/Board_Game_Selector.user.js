@@ -127,6 +127,9 @@ function getUserCollection() {
 }
 
 function createGameDisplay(gameItems) {
+	var selectorDiv = document.getElementById("boardGameSelector");
+	selectorDiv.removeChild(document.getElementById("games"));
+	
 	var gameDiv = document.createElement("div");
 	gameDiv.id = "games";
 	
@@ -143,36 +146,50 @@ function createGameDisplay(gameItems) {
 	gameRow.appendChild(createGameDisplayColumnHeader("BGG Rating"));
 	
 	gameTable.appendChild(gameRow);
+	
+	var numberOfPlayers = document.getElementById("numPlayersInput").value;
+	//TODO: Need to validate that it's a number and display an error instead of the games.
+	alert("numPlayers = " + document.getElementById("numPlayersInput"));
+	alert("numberOfPlayers = " + numberOfPlayers);
+	
 	var gameImage;
 	var gameImageData;
 	var gameDataText;
 	var gameStatTag;
 	var gameRatingTag;
+	var minimumPlayers;
+	var maximumPlayers;
 	for (var i=0; i<gameItems.length; i++) {
-		gameRow = document.createElement("tr");
-		
-		/* Showing thumbnail images, but need to consider their size more.
-		gameImage = document.createElement("td");
-		gameImageData = document.createElement("img");
-		gameImageData.src = gameItems[i].getElementsByTagName("thumbnail")[0].textContent;
-		gameImage.appendChild(gameImageData);
-		gameRow.appendChild(gameImage);
-		*/
-		
-		gameRow.appendChild(createGameDisplayColumnData(gameItems[i].getElementsByTagName("name")[0].textContent));
-		
 		gameStatTag = gameItems[i].getElementsByTagName("stats")[0];
-		gameDataText = gameStatTag.getAttribute("minplayers") + "-" + gameStatTag.getAttribute("maxplayers");
-		gameRow.appendChild(createGameDisplayColumnData(gameDataText));
+		minimumPlayers = gameStatTag.getAttribute("minplayers");
+		maximumPlayers = gameStatTag.getAttribute("maxplayers");
 		
-		gameRow.appendChild(createGameDisplayColumnData(gameStatTag.getAttribute("playingtime")));
-		
-		gameRatingTag = gameStatTag.getElementsByTagName("rating")[0];
-		gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getAttribute("value")));
-		
-		gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getElementsByTagName("average")[0].getAttribute("value")));
-		
-		gameTable.appendChild(gameRow);
+		if ((numberOfPlayers == null && numberOfPlayers !== null) ||
+				minimumPlayers <= numberOfPlayers && numberOfPlayers <= maximumPlayers) {
+			gameRow = document.createElement("tr");
+			
+			/* Showing thumbnail images, but need to consider their size more.
+			gameImage = document.createElement("td");
+			gameImageData = document.createElement("img");
+			gameImageData.src = gameItems[i].getElementsByTagName("thumbnail")[0].textContent;
+			gameImage.appendChild(gameImageData);
+			gameRow.appendChild(gameImage);
+			*/
+			
+			gameRow.appendChild(createGameDisplayColumnData(gameItems[i].getElementsByTagName("name")[0].textContent));
+			
+			gameDataText = minimumPlayers + "-" + maximumPlayers;
+			gameRow.appendChild(createGameDisplayColumnData(gameDataText));
+			
+			gameRow.appendChild(createGameDisplayColumnData(gameStatTag.getAttribute("playingtime")));
+			
+			gameRatingTag = gameStatTag.getElementsByTagName("rating")[0];
+			gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getAttribute("value")));
+			
+			gameRow.appendChild(createGameDisplayColumnData(gameRatingTag.getElementsByTagName("average")[0].getAttribute("value")));
+			
+			gameTable.appendChild(gameRow);
+		}
 	}
 	
 	var selectorDiv = document.getElementById("boardGameSelector");
@@ -193,10 +210,18 @@ function createGameDisplayColumnHeader(columnName) {
 	return columnHeader;
 }
 
+function isNumber(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
 var bgsDiv = document.createElement("div");
 bgsDiv.id = "boardGameSelector";
 createEnablingCheckbox(bgsDiv);
 createGameSelectorForm(bgsDiv);
+
+var gameDiv = document.createElement("div");
+gameDiv.id = "games";
+bgsDiv.appendChild(gameDiv);
 
 
 var mainContent = document.getElementById("maincontent");
