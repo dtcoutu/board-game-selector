@@ -1,0 +1,1 @@
+This script adds an interface for choosing a game to play from a players collection that is hosted on BoardGameGeek.
